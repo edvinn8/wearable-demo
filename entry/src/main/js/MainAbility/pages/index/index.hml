@@ -1,0 +1,7 @@
+<div class="container">
+    <progress class="progressArc" type="arc" percent="{{ progressNumber }}"></progress>
+    <text class="progress-text">{{ progressNumber }}%</text>
+    <input class="updateBtn" type="button" value="Update" onclick="updateProgress"></input>
+
+    <text class="version-text">v0.0.10-alpha</text>
+</div>

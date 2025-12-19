@@ -1,0 +1,87 @@
+.container {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  background-color: #CE2939;
+}
+.containerFlex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+}
+.title {
+  font-size: 30px;
+  text-align: center;
+  width: 350px;
+  height: 60px;
+}
+.row{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100px;
+  background-color: transparent;
+}
+.btn{
+  display: flex;
+  width: 170px;
+  height: 50px;
+}
+.btn-small{
+  display: flex;
+  width: 100px;
+  height: 50px;
+}
+.backBtn {
+  width: 200px;
+  height: 50px;
+}
+.stack {
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+}
+.background {
+  width: 100%;
+  height: 100%;
+}
+
+.updateBtn{
+  width: 50%;
+  height: 60px;
+  font-size: 32px;
+  padding-bottom: 4px;
+  margin-top: 84px;
+  background-color: #477050;
+}
+.progressHorizontal{
+  color: #6b9ac7;
+  width: 300px;
+  height: 50px;
+}
+.progressArc{
+  color: #477050;
+  width: 400px;
+  height: 250px;
+}
+
+.progress-text {
+  font-size: 40px;
+  margin-top: -160px;
+}
+
+.version-text {
+  margin-top: 20px;
+  font-size: 16px;
+}

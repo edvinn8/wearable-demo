@@ -1,0 +1,20 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "module description"
+    },
+    {
+      "name": "MainAbility_desc",
+      "value": "A short description of Edo's first wearable app."
+    },
+    {
+      "name": "MainAbility_label",
+      "value": "Edo's App"
+    },
+    {
+      "name": "reqPermissions",
+      "value": "Needs access to internet."
+    }
+  ]
+}
