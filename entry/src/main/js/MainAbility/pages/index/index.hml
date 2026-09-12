@@ -3,5 +3,5 @@
     <text class="progress-text">{{ progressNumber }}%</text>
     <input class="updateBtn" type="button" value="Update" onclick="updateProgress"></input>
 
-    <text class="version-text">v0.0.10-alpha</text>
+    <text class="version-text">v0.0.11-alpha</text>
 </div>
