@@ -1,42 +1,38 @@
-import app from '@system.app'
+import app from '@system.app';
+import router from '@system.router';
 
 export default {
     data: {
         title: '',
         progressNumber: 0,
-        updateTimer: null,
-        updateProgress() {
-            const randomIncrement = Math.floor(Math.random() * 15) + 1;
-
-            if (this.progressNumber > 99) {
-                this.progressNumber = 0
-            } else {
-                this.progressNumber = Math.min(this.progressNumber + randomIncrement, 100);
-            }
-
-            console.log("Incremented by " + randomIncrement + " to: " + this.progressNumber);
-        },
-        touchMove(e) {
-            if (e.direction == "right") {
-                this.appExit();
-            }
-        },
-        appExit() {
-            app.terminate();
+        updateTimer: null
+    },
+    updateProgress() {
+        var randomIncrement = Math.floor(Math.random() * 15) + 1;
+        this.progressNumber = this.progressNumber > 99
+            ? 0 : Math.min(this.progressNumber + randomIncrement, 100);
+    },
+    touchMove(e) {
+        if (e.direction === 'right') {
+            this.appExit();
         }
     },
+    goNet() {
+        console.log('[NETTEST] opening test page; build 1.0.2');
+        router.replace({ uri: 'pages/nettest/nettest' });
+    },
+    appExit() {
+        app.terminate();
+    },
     onInit() {
+        var self = this;
         this.title = this.$t('strings.world');
-        console.log("startup");
-
-        // Start auto progress update with random increments every 2 seconds
-        this.updateTimer = setInterval(() => {
-            this.updateProgress();
+        this.updateTimer = setInterval(function () {
+            self.updateProgress();
         }, 500);
     },
     onDestroy() {
-        // Clean up timer when page is destroyed
-        if (this.updateTimer) {
+        if (this.updateTimer !== null) {
             clearInterval(this.updateTimer);
             this.updateTimer = null;
         }

@@ -84,6 +84,22 @@ In [AppGallery Connect](https://developer.huawei.com/consumer/en/service/josp/ag
 
 Keep both filenames identical and no config changes are needed. Rebuild.
 
+**Then update the phone app.** Renewing the debug certificate changes the watch's SHA-256
+fingerprint, which the Android companion holds as its peer fingerprint. Re-read it and
+paste the new value into the companion's `setPeerFingerPrint(...)` call, or Wear Engine
+P2P starts failing with result code 206:
+
+```sh
+openssl crl2pkcs7 -nocrl -certfile certs/mac-cert.cer | \
+  openssl pkcs7 -print_certs | \
+  awk '/BEGIN/{n++} n==3' | openssl x509 -noout -fingerprint -sha256
+```
+
+Current value (valid to 2027-09-12):
+`9A:3A:7E:58:C0:61:C4:F5:20:3A:85:A8:BA:B6:1B:35:8A:7F:BC:37:E2:BE:49:14:D6:E3:38:50:71:97:D4:F1`
+
+See FIREBASE-REALTIME.md for the full peer configuration on both sides.
+
 Verify locally before rebuilding:
 
 ```sh

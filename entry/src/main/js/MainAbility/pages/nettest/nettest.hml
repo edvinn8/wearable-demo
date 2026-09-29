@@ -1,0 +1,9 @@
+<div class="c">
+    <text class="t">HTTP test 1.0.2</text>
+    <text class="s">{{ status }}</text>
+    <text class="d">{{ detail }}</text>
+    <text class="e">{{ elapsed }}</text>
+    <input class="b" type="button" value="1 FETCH" onclick="testFetch"></input>
+    <input class="b" type="button" value="2 HTTPS" onclick="testHttps"></input>
+    <input class="b" type="button" value="3 Users JSON" onclick="testJson"></input>
+</div>

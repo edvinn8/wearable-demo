@@ -62,7 +62,7 @@
   height: 60px;
   font-size: 32px;
   padding-bottom: 4px;
-  margin-top: 84px;
+  margin-top: 12px;
   background-color: #477050;
 }
 .progressHorizontal{
@@ -73,12 +73,12 @@
 .progressArc{
   color: #477050;
   width: 400px;
-  height: 250px;
+  height: 160px;
 }
 
 .progress-text {
   font-size: 40px;
-  margin-top: -160px;
+  margin-top: -100px;
 }
 
 .version-text {
