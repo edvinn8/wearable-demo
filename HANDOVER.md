@@ -1,3 +1,13 @@
+# Current handover — 2026-09-30
+
+**Active development moved to `../matchday-scores`, branch `codex/companion-port`. Read `../matchday-scores/HANDOVER.md` first.** All ten watch screens were ported onto the working Matchday transport alongside the phone app's Firebase/positions functionality. Both packages display as Wear Companion 1.1.0 while retaining the approved Matchday identities.
+
+This branch (`codex/wear-companion-link`) preserves the original watch's native API selection, receiver ordering, timeout and supportLists fixes. The original phone app still hit Huawei scope-unauthorized code 8; the user chose the port rather than further investigating that identity. Keep this repository as a donor/reference. Its mock controls remain simulations, and no real trading commands were added by the port.
+
+The sections below are historical investigation notes. Their old “next check”/“pending” instructions are superseded by the active repository's handover and device checklist.
+
+---
+
 # Handover — Huawei Watch GT 6 personal dashboard app
 
 Last updated: 2026-09-22. Read this first; `SIGNING.md` and `FIREBASE-REALTIME.md` hold
@@ -267,3 +277,26 @@ the crown scrolls lists. Nothing in the mock sends anything.
 The `pages/nettest` HTTP test page (and the INTERNET permission only it used) is gone: the watch gets
 its data over Wear Engine P2P from the phone, so direct HTTP from the watch isn't needed. The sections
 above that mention it are history.
+
+
+## Connection comparison with Matchday Scores — 2026-09-30
+
+Matchday watch 1.0.8 + phone 1.0.2 is user-confirmed working. This app pair remains pending a physical retest. The fixes below are on branch `codex/wear-companion-link`; there is no UI modernization in this change.
+
+Verified for Wear Companion in Chrome AGC: Android package `com.edvinn.wearcompanion`, app ID `118971063`, and registered SHA-256 match this watch's configured phone peer. The public key derived from the non-CA `mac-cert.cer` signer matches `WearIds.WATCH_FINGERPRINT`. The watch debug profile is for `com.edvinn.firstwearableapplication`. Source device discovery already selects connected devices without Matchday's old capability filter. The original compiled pages all pass the SDK lite parser, so the old regex/error-34 defect was not reproduced here. Positions uses numeric age rather than ISO timestamps, so Matchday's nanosecond timestamp fix does not apply.
+
+Prepared watch 1.0.7 connection fixes:
+
+- Added the missing `module.metaData.customizeData` supportLists declaration for the existing Wear Companion package and signer, matching the working Matchday configuration pattern. Device impact still requires the retest.
+- Reproduced `FeatureAbility is not defined` when the native version callback is delayed. The original wrapper chose the legacy branch while `version` was still undefined. It now chooses native detect/subscribe/send/unsubscribe by API availability, retaining its existing callback interface and legacy fallback.
+- Positions now waits for receiver registration before the initial request and periodic refresh. Late registration cannot restart a destroyed page.
+- Reproduced a false timeout after a fast response: the timeout was armed after sending. It is now armed before sending so a reply can clear it.
+- Native detect/subscribe/send failures retain the native operation, data and code in the watch log.
+
+Validation: `node --test test/*.test.mjs` exercises the actual wrapper/page code with a controlled native boundary: delayed and immediate version callbacks, echo exchange, registration errors, registration ordering/destruction, fast replies, and config/peer consistency. All six tests pass after reproducing the failures. Use DevEco's bundled Node if system Node is unavailable; no package-wide `type: module` is needed. Existing vendor CRLF line endings are preserved.
+
+The phone is not connected through ADB, so its installed APK signer and current runtime error could not be read. Ask for the phone's Permission / Find watch / Ping log. A separate Scope unauthorized error must be diagnosed from the installed APK identity and Huawei authorization; these watch fixes do not establish that an authorization cache expired. No AGC settings or phone source were changed.
+
+Next device check after rebuilding the signed watch HAP: keep Wear Companion open, start its watch link, confirm Listening, then use watch Tools → P2P test → Send hello. The phone should log the incoming text and the watch should show the echoed text. This proves transport without requiring Firebase sign-in. Then try Positions → Refresh; a Sign in on the phone message is a successfully received application response, not a connection failure.
+
+Build status: user authorized the rebuild. Signed wearable-demo 1.0.7 HAP built successfully on 2026-09-30; all 11 compiled app/page scripts pass the SDK lite parser and the outer HAP passes signature and digest verification. Artifact: `entry/build/default/outputs/default/wearable-demo-1.0.7-signed.hap`, SHA-256 `4d0c75d08e17d9d96a4079878a90d4b90c5c6c422beb6bfcf567430f1d0f3937`. The existing CSS `text-color` warnings remain for the later UI work. Phone APK unchanged. Manual transfer/install and the physical echo test remain pending.

@@ -3,8 +3,8 @@
     "bundleName": "com.edvinn.firstwearableapplication",
     "vendor": "example",
     "version": {
-      "code": 1000006,
-      "name": "1.0.6"
+      "code": 1000007,
+      "name": "1.0.7"
     }
   },
   "deviceConfig": {},
@@ -44,6 +44,15 @@
         ],
         "name": ".MainAbility"
       }
-    ]
+    ],
+    "metaData": {
+      "customizeData": [
+        {
+          "name": "supportLists",
+          "value": "com.edvinn.wearcompanion:73A6B25A06E39EBAA6D14E4A0F53540AF225E4CF182A533EEEE9D1034CDA2FCF",
+          "extra": ""
+        }
+      ]
+    }
   }
 }

@@ -17,6 +17,12 @@
 
 import wearengine from "@system.wearengine";
 
+// GT 6 exposes the native methods before the asynchronous version callback.
+// Choose by the available API so startup never falls into undefined FeatureAbility.
+function logNativeFailure(operation, data, code) {
+  console.error("[P2P] " + operation + " failed; code=" + code + "; data=" + String(data));
+}
+
 var WearEngineConst = {
   DELAY_FILEAPP_VALUE: "internal://app/", // Default file storage path of third-party apps
   DEFAULT_EMPTY_VALUE: "", // Default empty string
@@ -162,10 +168,10 @@ var P2pClient = (function() {
         pingCallback.onFailure();
         pingCallback.onPingResult(failCode);
       }
-      console.error("ping failed.");
+      logNativeFailure("detect", data, code);
     };
 
-    if (this.version >= WEARENGINE_SERVICE_VISION_401) {
+    if (typeof wearengine.detect === "function") {
       wearengine.detect({
         bundleName: this.peerPkgName,
         success: successCallBack,
@@ -238,16 +244,22 @@ var P2pClient = (function() {
         receiver.onSuccess();
       }
     };
-    if (this.version >= WEARENGINE_SERVICE_VISION_401) {
+    if (typeof wearengine.subscribeMsg === "function") {
       wearengine.unsubscribeMsg();
       wearengine.subscribeMsg({
         success: successCallBack,
-        fail: receiver.onFailure
+        fail: function(data, code) {
+          logNativeFailure("subscribeMsg", data, code);
+          receiver.onFailure(data, code);
+        }
       });
     } else {
       FeatureAbility.subscribeMsg({
         success: successCallBack,
-        fail: receiver.onFailure
+        fail: function(data, code) {
+          logNativeFailure("subscribeMsg", data, code);
+          receiver.onFailure(data, code);
+        }
       });
     }
   };
@@ -293,9 +305,9 @@ var P2pClient = (function() {
         sendCallback.onFailure();
         sendCallback.onSendResult(failCode);
         sendCallback.onSendProgress(0 + "%");
-        console.error("send message failed.");
+        logNativeFailure("sendMsg", errorMessage, code);
       };
-      if (this.version >= WEARENGINE_SERVICE_VISION_401) {
+      if (typeof wearengine.sendMsg === "function") {
         wearengine.sendMsg({
           deviceId: "remote",
           bundleName: this.peerPkgName,
@@ -389,7 +401,7 @@ var P2pClient = (function() {
    * receiver: onSuccess()
    */
   P2pClient.prototype.unregisterReceiver = function(receiver) {
-    if (this.version >= WEARENGINE_SERVICE_VISION_401) {
+    if (typeof wearengine.unsubscribeMsg === "function") {
       wearengine.unsubscribeMsg();
     } else {
       FeatureAbility.unsubscribeMsg();

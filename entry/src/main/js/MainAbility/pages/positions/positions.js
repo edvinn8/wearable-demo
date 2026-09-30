@@ -62,10 +62,22 @@ export default {
     onInit() {
         var self = this;
         client = new P2pClient();
+        var pageClient = client;
+        var ready = false;
         client.setPeerPkgName(PHONE_PKG);
         client.setPeerFingerPrint(PHONE_FINGERPRINT);
         client.registerReceiver({
-            onSuccess: function () {},
+            onSuccess: function () {
+                if (client !== pageClient || ready) {
+                    return;
+                }
+                ready = true;
+                console.log('[POSITIONS] receiver ready; requesting phone data');
+                self.refresh();
+                refreshTimer = setInterval(function () {
+                    self.refresh();
+                }, REFRESH_MS);
+            },
             onFailure: function () {
                 self.showMessage('Can\'t listen to the phone (Wear Engine)');
             },
@@ -76,10 +88,6 @@ export default {
                 self.onReply(String(message));
             }
         });
-        this.refresh();
-        refreshTimer = setInterval(function () {
-            self.refresh();
-        }, REFRESH_MS);
     },
     onDestroy() {
         if (refreshTimer !== null) {
@@ -102,6 +110,12 @@ export default {
         builder.setDescription('{"t":"get"}');
         var message = new Message();
         message.builder = builder;
+        // Arm before sending: a fast response must be able to clear this timer.
+        this.clearAnswerTimer();
+        answerTimer = setTimeout(function () {
+            answerTimer = null;
+            self.phoneUnavailable();
+        }, ANSWER_TIMEOUT_MS);
         client.send(message, {
             onSuccess: function () {},
             onFailure: function () {},
@@ -112,11 +126,6 @@ export default {
             },
             onSendProgress: function () {}
         });
-        this.clearAnswerTimer();
-        answerTimer = setTimeout(function () {
-            answerTimer = null;
-            self.phoneUnavailable();
-        }, ANSWER_TIMEOUT_MS);
     },
     onReply(text) {
         if (text.indexOf('echo:') === 0) {
