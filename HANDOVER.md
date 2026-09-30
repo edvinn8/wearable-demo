@@ -244,3 +244,11 @@ The Wear Engine application was approved. The HTTP-vs-P2P question is moot for n
   (`MainActivity.WATCH_FINGERPRINT`). A new watch certificate means a new fingerprint on the phone.
 - **Next:** build both, run the test order in `wear-companion/README.md`. Once messages flow both
   ways, the phone fetches the dashboard data and pushes it to the watch (≤1 KB per message).
+
+### Positions page — 1.0.4
+
+The app now opens on **Positions** (`pages/positions`): net P/L, equity, margin level and one row per
+symbol + side, from the phone's `LinkService` (wear-companion), which answers `{"t":"get"}` from a live
+Firestore listener on `relay-positions`. Refreshes every 30 s while open; says "phone unavailable" when
+no answer comes within 10 s. *Tools* leads to the old home page (HTTP test, P2P test).
+Message format: `wear-companion/app/src/main/java/com/edvinn/wearcompanion/Protocol.java`.

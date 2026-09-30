@@ -1,0 +1,18 @@
+<div class="c" ontouchmove="swipe">
+    <text class="head up" show="{{ netUp }}">{{ netText }}</text>
+    <text class="head down" show="{{ netDown }}">{{ netText }}</text>
+    <text class="sub">{{ subText }}</text>
+    <list class="lst" show="{{ hasRows }}">
+        <list-item for="{{ rows }}" class="it">
+            <text class="sym">{{ $item.label }}</text>
+            <text class="val up" show="{{ $item.up }}">{{ $item.net }}</text>
+            <text class="val down" show="{{ $item.down }}">{{ $item.net }}</text>
+        </list-item>
+    </list>
+    <text class="msg" show="{{ hasMsg }}">{{ msg }}</text>
+    <text class="foot">{{ foot }}</text>
+    <div class="btns">
+        <input class="b" type="button" value="Refresh" onclick="refresh"></input>
+        <input class="b gray" type="button" value="Tools" onclick="tools"></input>
+    </div>
+</div>
