@@ -1,0 +1,8 @@
+<div class="c">
+    <text class="t">P2P test</text>
+    <text class="s">{{ status }}</text>
+    <text class="d">{{ detail }}</text>
+    <input class="b" type="button" value="1 Ping phone" onclick="ping"></input>
+    <input class="b" type="button" value="2 Send hello" onclick="sendHello"></input>
+    <input class="b back" type="button" value="Back" onclick="back"></input>
+</div>

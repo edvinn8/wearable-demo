@@ -4,5 +4,6 @@
     <input class="updateBtn" type="button" value="Update" onclick="updateProgress"></input>
 
     <input class="updateBtn" type="button" value="HTTP test" onclick="goNet"></input>
-    <text class="version-text">v1.0.2 — NETTEST</text>
+    <input class="updateBtn" type="button" value="P2P test" onclick="goP2p"></input>
+    <text class="version-text">v1.0.3 — P2P</text>
 </div>

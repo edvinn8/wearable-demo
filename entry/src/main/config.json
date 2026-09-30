@@ -3,8 +3,8 @@
     "bundleName": "com.edvinn.firstwearableapplication",
     "vendor": "example",
     "version": {
-      "code": 1000002,
-      "name": "1.0.2"
+      "code": 1000003,
+      "name": "1.0.3"
     }
   },
   "deviceConfig": {},
@@ -32,7 +32,8 @@
       {
         "pages": [
           "pages/index/index",
-          "pages/nettest/nettest"
+          "pages/nettest/nettest",
+          "pages/p2p/p2p"
         ],
         "name": ".MainAbility"
       }

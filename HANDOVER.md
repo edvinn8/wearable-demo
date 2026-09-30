@@ -227,3 +227,20 @@ The existing user-authorization-path attachment was retained.
 
 A separate email was prepared in Gmail for hihealth@huawei.com; the assistant
 has not sent it. No bot/app rebuild was performed during resubmission.
+
+## Wear Engine approved — P2P test, 2026-09-30
+
+The Wear Engine application was approved. The HTTP-vs-P2P question is moot for now: P2P is the path.
+
+- **Phone side:** new repo `wear-companion` (beside this one, `com.edvinn.wearcompanion`) — a P2P
+  smoke test: permission → find watch → ping → send, and it echoes whatever the watch sends. Its
+  README has the build steps and the identity table.
+- **Watch side (this repo, 1.0.3):** *P2P test* page (`pages/p2p`) — ping the phone, send hello,
+  shows what arrives. Uses the official lite-wearable SDK `common/wearengine.js` **5.0.2.306**
+  (zip SHA-256 `64130a34…1b56`, matches Huawei's download page).
+- **Fingerprints:** the watch names the phone by the SHA-256 of `certs/android-companion.jks`
+  (uppercase hex, `common/peer.js`); the phone names the watch by
+  `com.edvinn.firstwearableapplication_` + base64 of the EC public key in `certs/mac-cert.cer`
+  (`MainActivity.WATCH_FINGERPRINT`). A new watch certificate means a new fingerprint on the phone.
+- **Next:** build both, run the test order in `wear-companion/README.md`. Once messages flow both
+  ways, the phone fetches the dashboard data and pushes it to the watch (≤1 KB per message).

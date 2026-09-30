@@ -21,6 +21,9 @@ export default {
         console.log('[NETTEST] opening test page; build 1.0.2');
         router.replace({ uri: 'pages/nettest/nettest' });
     },
+    goP2p() {
+        router.replace({ uri: 'pages/p2p/p2p' });
+    },
     appExit() {
         app.terminate();
     },
