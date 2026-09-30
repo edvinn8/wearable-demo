@@ -1,0 +1,160 @@
+.page {
+  flex-direction: column;
+  align-items: center;
+  width: 466px;
+  height: 466px;
+  background-color: #000000;
+}
+.lst {
+  width: 466px;
+  height: 466px;
+}
+.title-item {
+  width: 466px;
+  height: 110px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+.title {
+  font-size: 30px;
+  color: #8aa0b8;
+  text-align: center;
+  width: 300px;
+  height: 40px;
+}
+.spacer {
+  width: 466px;
+  height: 110px;
+}
+.up {
+  color: #4ade80;
+}
+.down {
+  color: #f87171;
+}
+.muted {
+  color: #8a94a1;
+}
+.btn {
+  font-size: 30px;
+  width: 240px;
+  height: 60px;
+  border-radius: 30px;
+  background-color: #1f6feb;
+  text-color: #ffffff;
+}
+.btn-red {
+  background-color: #dc2626;
+}
+.btn-gray {
+  background-color: #3a4450;
+}
+.btn-item {
+  width: 466px;
+  height: 80px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.sw {
+  width: 466px;
+  height: 466px;
+}
+.card {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 466px;
+  height: 466px;
+}
+.card-label {
+  font-size: 24px;
+  color: #8aa0b8;
+  width: 320px;
+  height: 36px;
+  text-align: center;
+}
+.gap {
+  margin-top: 24px;
+}
+.big {
+  font-size: 38px;
+  color: #ffffff;
+  width: 340px;
+  height: 60px;
+  text-align: center;
+}
+.big-up {
+  font-size: 38px;
+  color: #4ade80;
+  width: 340px;
+  height: 60px;
+  text-align: center;
+}
+.big-down {
+  font-size: 38px;
+  color: #f87171;
+  width: 340px;
+  height: 60px;
+  text-align: center;
+}
+.line {
+  font-size: 24px;
+  color: #b8c4d0;
+  width: 340px;
+  height: 36px;
+  text-align: center;
+}
+.hint {
+  font-size: 24px;
+  color: #4b5563;
+  width: 300px;
+  height: 40px;
+  text-align: center;
+  margin-top: 30px;
+}
+.gauge {
+  width: 300px;
+  height: 300px;
+}
+.arc {
+  width: 300px;
+  height: 300px;
+  center-x: 150px;
+  center-y: 150px;
+  radius: 140px;
+  stroke-width: 20px;
+  start-angle: 240;
+  total-angle: 240;
+  color: #4ade80;
+  background-color: #1a1f26;
+}
+.gauge-center {
+  width: 300px;
+  height: 300px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.gauge-value {
+  font-size: 38px;
+  color: #ffffff;
+  width: 200px;
+  height: 56px;
+  text-align: center;
+}
+.gauge-sub {
+  font-size: 24px;
+  color: #8a94a1;
+  width: 220px;
+  height: 34px;
+  text-align: center;
+}
+.chart {
+  width: 340px;
+  height: 180px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}

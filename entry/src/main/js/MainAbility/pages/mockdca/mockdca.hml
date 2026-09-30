@@ -1,0 +1,19 @@
+<div class="page" onswipe="onSwipe">
+    <list class="lst" ref="listRef">
+        <list-item class="title-item">
+            <text class="title">Layered DCA</text>
+            <text class="subtitle">{{ summary }}</text>
+        </list-item>
+        <list-item for="{{ bots }}" class="bot-item" onclick="openBot({{ $idx }})">
+            <div class="bot">
+                <text class="{{ $item.dotClass }}">●</text>
+                <div class="bot-mid">
+                    <text class="bot-sym">{{ $item.symbol }}</text>
+                    <text class="bot-sub">{{ $item.sub }}</text>
+                </div>
+                <text class="{{ $item.netClass }}">{{ $item.net }}</text>
+            </div>
+        </list-item>
+        <list-item class="spacer"></list-item>
+    </list>
+</div>

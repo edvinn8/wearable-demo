@@ -252,3 +252,12 @@ symbol + side, from the phone's `LinkService` (wear-companion), which answers `{
 Firestore listener on `relay-positions`. Refreshes every 30 s while open; says "phone unavailable" when
 no answer comes within 10 s. *Tools* leads to the old home page (HTTP test, P2P test).
 Message format: `wear-companion/app/src/main/java/com/edvinn/wearcompanion/Protocol.java`.
+
+### Mock UI — 1.0.5
+
+*Tools → Mock UI* previews the planned watch app on made-up data (`common/mock.js`), no phone needed:
+hub → **Positions** (tap a row → group detail with facts, DCA layers and a two-step close on an overlay
+layer) · **Layered DCA** (running first; tap → Stop/Start with confirm) · **Account** (vertical cards:
+equity, today/week P/L, margin-level arc, equity chart, source) · **States** (loading, phone
+unavailable, error, cBot not updating/stopped, no positions). Swipe right = one level up everywhere;
+the crown scrolls lists. Nothing in the mock sends anything.

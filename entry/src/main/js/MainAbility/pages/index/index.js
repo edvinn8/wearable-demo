@@ -24,6 +24,9 @@ export default {
     goPositions() {
         router.replace({ uri: 'pages/positions/positions' });
     },
+    goMock() {
+        router.replace({ uri: 'pages/mockhub/mockhub' });
+    },
     goP2p() {
         router.replace({ uri: 'pages/p2p/p2p' });
     },
