@@ -3,8 +3,8 @@
     "bundleName": "com.edvinn.firstwearableapplication",
     "vendor": "example",
     "version": {
-      "code": 1000005,
-      "name": "1.0.5"
+      "code": 1000006,
+      "name": "1.0.6"
     }
   },
   "deviceConfig": {},
@@ -33,7 +33,6 @@
         "pages": [
           "pages/positions/positions",
           "pages/index/index",
-          "pages/nettest/nettest",
           "pages/p2p/p2p",
           "pages/mockhub/mockhub",
           "pages/mockpos/mockpos",
@@ -44,18 +43,6 @@
           "pages/mockstates/mockstates"
         ],
         "name": ".MainAbility"
-      }
-    ],
-    "reqPermissions": [
-      {
-        "name": "ohos.permission.INTERNET",
-        "usedScene": {
-          "ability": [
-            "MainAbility"
-          ],
-          "when": "always"
-        },
-        "reason": "$string:reqPermissions"
       }
     ]
   }

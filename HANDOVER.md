@@ -261,3 +261,9 @@ layer) · **Layered DCA** (running first; tap → Stop/Start with confirm) · **
 equity, today/week P/L, margin-level arc, equity chart, source) · **States** (loading, phone
 unavailable, error, cBot not updating/stopped, no positions). Swipe right = one level up everywhere;
 the crown scrolls lists. Nothing in the mock sends anything.
+
+### HTTP test removed — 1.0.6
+
+The `pages/nettest` HTTP test page (and the INTERNET permission only it used) is gone: the watch gets
+its data over Wear Engine P2P from the phone, so direct HTTP from the watch isn't needed. The sections
+above that mention it are history.

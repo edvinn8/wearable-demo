@@ -11,10 +11,6 @@
     {
       "name": "MainAbility_label",
       "value": "Edo's App"
-    },
-    {
-      "name": "reqPermissions",
-      "value": "Needs access to internet."
     }
   ]
 }

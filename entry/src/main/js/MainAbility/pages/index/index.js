@@ -17,10 +17,6 @@ export default {
             this.appExit();
         }
     },
-    goNet() {
-        console.log('[NETTEST] opening test page; build 1.0.2');
-        router.replace({ uri: 'pages/nettest/nettest' });
-    },
     goPositions() {
         router.replace({ uri: 'pages/positions/positions' });
     },

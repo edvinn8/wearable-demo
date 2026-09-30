@@ -1,7 +1,6 @@
 <div class="container">
     <input class="updateBtn" type="button" value="Positions" onclick="goPositions"></input>
-    <input class="updateBtn" type="button" value="HTTP test" onclick="goNet"></input>
     <input class="updateBtn" type="button" value="P2P test" onclick="goP2p"></input>
     <input class="updateBtn" type="button" value="Mock UI" onclick="goMock"></input>
-    <text class="version-text">v1.0.5 — tools</text>
+    <text class="version-text">v1.0.6 — tools</text>
 </div>
