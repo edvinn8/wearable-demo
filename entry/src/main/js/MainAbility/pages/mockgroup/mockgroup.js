@@ -64,28 +64,28 @@ export default {
     onShow() {
         this.$refs.listRef.rotation({ focus: true });
     },
-    show(step) {
+    setStep(step) {
         this.overlay = step > 0;
         this.step1 = step === 1;
         this.step2 = step === 2;
         this.step3 = step === 3;
     },
     askClose() {
-        this.show(1);
+        this.setStep(1);
     },
     confirmClose() {
         var self = this;
-        this.show(2);
+        this.setStep(2);
         setTimeout(function () {
             var g = GROUPS[self.idx] || GROUPS[0];
             self.resultTitle = 'Closed ' + self.title;
             self.resultText = g.layers.length + (g.layers.length === 1 ? ' position' : ' positions')
                 + ' · net ' + money(groupNet(g) + 0.46) + ' ' + ACCOUNT.cur + ' (mock)';
-            self.show(3);
+            self.setStep(3);
         }, 1800);
     },
     cancel() {
-        this.show(0);
+        this.setStep(0);
     },
     done() {
         router.replace({ uri: 'pages/mockpos/mockpos' });
@@ -96,7 +96,7 @@ export default {
     onSwipe(e) {
         if (e.direction === 'right') {
             if (this.overlay) {
-                this.show(0);
+                this.setStep(0);
             } else {
                 this.back();
             }

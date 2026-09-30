@@ -4,6 +4,8 @@ import { money, plain, ageText } from '../../common/format.js';
 
 // Mock Positions page — the planned real page, fed by common/mock.js.
 // `state` comes from the States page: ok | loading | unavailable | error | stale | stopped | empty.
+// Don't name a method `render`: the lite compiler attaches the compiled template to the page under
+// that name, so a page method called render is silently replaced by it (the page stays empty).
 export default {
     data: {
         state: 'ok',
@@ -26,14 +28,14 @@ export default {
         foot: ''
     },
     onInit() {
-        this.render();
+        this.fill();
     },
     onShow() {
         if (this.$refs.listRef) {
             this.$refs.listRef.rotation({ focus: true });
         }
     },
-    render() {
+    fill() {
         var s = this.state;
         this.isLoading = s === 'loading';
         this.isMessage = s === 'unavailable' || s === 'error';
@@ -42,7 +44,7 @@ export default {
             var self = this;
             setTimeout(function () {
                 self.state = 'ok';
-                self.render();
+                self.fill();
             }, 2000);
             return;
         }
@@ -93,7 +95,7 @@ export default {
     },
     retry() {
         this.state = 'loading';
-        this.render();
+        this.fill();
     },
     openGroup(idx) {
         router.replace({ uri: 'pages/mockgroup/mockgroup', params: { idx: idx } });
