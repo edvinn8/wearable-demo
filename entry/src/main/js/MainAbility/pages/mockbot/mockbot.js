@@ -8,11 +8,15 @@ export default {
     data: {
         idx: 0,
         symbol: '',
-        dotClass: 'dot running',
+        isRunning: false,
+        isStarting: false,
+        isOffline: false,
+        isStopped: false,
         stateText: '',
         posText: '',
         netText: '',
-        netClass: 'bot-net up',
+        netUp: true,
+        netDown: false,
         hint: '',
         canStop: false,
         canStart: false,
@@ -27,11 +31,15 @@ export default {
         var b = DCA_BOTS[this.idx] || DCA_BOTS[0];
         var inPos = b.position !== 'flat';
         this.symbol = b.symbol;
-        this.dotClass = 'dot ' + b.state;
+        this.isRunning = b.state === 'running';
+        this.isStarting = b.state === 'starting';
+        this.isOffline = b.state === 'offline';
+        this.isStopped = b.state === 'stopped';
         this.stateText = b.state;
         this.posText = inPos ? b.position + ' · ' + b.layers + (b.layers === 1 ? ' layer' : ' layers') : 'flat';
         this.netText = inPos ? 'net ' + money(b.net) : '';
-        this.netClass = b.net >= 0 ? 'bot-net up' : 'bot-net down';
+        this.netUp = b.net >= 0;
+        this.netDown = b.net < 0;
         this.canStop = b.state === 'running';
         this.canStart = b.state === 'stopped' || b.state === 'offline';
         this.hint = b.state === 'starting' ? 'Starting — wait for it to report in'

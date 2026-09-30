@@ -8,9 +8,11 @@ export default {
     data: {
         idx: 0,
         title: '',
-        sideClass: 'side-title buy',
+        isBuy: true,
+        isSell: false,
         netText: '',
-        netClass: 'head-net up',
+        netUp: true,
+        netDown: false,
         lotsText: '',
         facts: [],
         layersTitle: '',
@@ -29,9 +31,11 @@ export default {
         var n = groupNet(g);
         var lots = groupLots(g);
         this.title = g.side + ' ' + g.symbol;
-        this.sideClass = g.side === 'BUY' ? 'side-title buy' : 'side-title sell';
+        this.isBuy = g.side === 'BUY';
+        this.isSell = g.side !== 'BUY';
         this.netText = money(n) + ' ' + ACCOUNT.cur;
-        this.netClass = n >= 0 ? 'head-net up' : 'head-net down';
+        this.netUp = n >= 0;
+        this.netDown = n < 0;
         this.lotsText = lots.toFixed(2) + ' lots' + (g.layers.length > 1 ? ' · ' + g.layers.length + ' layers' : '');
         this.facts = [
             { label: g.layers.length > 1 ? 'Avg entry' : 'Entry', value: price(g.avg, g.digits) },
@@ -49,7 +53,8 @@ export default {
                 entry: price(l.entry, g.digits),
                 sub: l.lots.toFixed(2) + ' · ' + l.opened,
                 net: money(l.net),
-                netClass: l.net >= 0 ? 'layer-net up' : 'layer-net down'
+                up: l.net >= 0,
+                down: l.net < 0
             });
         }
         this.layers = layers;

@@ -1,6 +1,6 @@
 <div class="page" onswipe="onSwipe">
     <!-- Vertical cards, so a right swipe still means "back" like everywhere else. -->
-    <swiper class="sw" vertical="true" indicator="true" loop="false">
+    <swiper class="sw" vertical="true" loop="false">
         <div class="card">
             <text class="card-label">EQUITY · {{ cur }}</text>
             <text class="big">{{ equity }}</text>
@@ -10,9 +10,11 @@
         </div>
         <div class="card">
             <text class="card-label">TODAY</text>
-            <text class="{{ todayClass }}">{{ today }}</text>
+            <text class="big-up" show="{{ todayUp }}">{{ today }}</text>
+            <text class="big-down" show="{{ todayDown }}">{{ today }}</text>
             <text class="card-label gap">THIS WEEK</text>
-            <text class="{{ weekClass }}">{{ week }}</text>
+            <text class="big-up" show="{{ weekUp }}">{{ week }}</text>
+            <text class="big-down" show="{{ weekDown }}">{{ week }}</text>
         </div>
         <div class="card">
             <text class="card-label">MARGIN LEVEL</text>

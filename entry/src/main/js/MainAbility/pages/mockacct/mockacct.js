@@ -12,9 +12,11 @@ export default {
         balanceLine: '',
         freeLine: '',
         today: '',
-        todayClass: 'big-up',
+        todayUp: true,
+        todayDown: false,
         week: '',
-        weekClass: 'big-up',
+        weekUp: true,
+        weekDown: false,
         ml: '',
         marginLine: '',
         gaugePercent: 0,
@@ -31,9 +33,11 @@ export default {
         this.balanceLine = 'Balance ' + plain(a.balance);
         this.freeLine = 'Free margin ' + plain(a.freeMargin);
         this.today = money(a.todayNet);
-        this.todayClass = a.todayNet >= 0 ? 'big-up' : 'big-down';
+        this.todayUp = a.todayNet >= 0;
+        this.todayDown = a.todayNet < 0;
         this.week = money(a.weekNet);
-        this.weekClass = a.weekNet >= 0 ? 'big-up' : 'big-down';
+        this.weekUp = a.weekNet >= 0;
+        this.weekDown = a.weekNet < 0;
         this.ml = a.marginLevel + '%';
         this.marginLine = 'margin ' + plain(a.margin);
         // Full arc at 2000 %, so healthy levels read as a mostly full gauge.

@@ -126,8 +126,8 @@
   center-y: 150px;
   radius: 140px;
   stroke-width: 20px;
-  start-angle: 240;
-  total-angle: 240;
+  start-angle: 240deg;
+  total-angle: 240deg;
   color: #4ade80;
   background-color: #1a1f26;
 }

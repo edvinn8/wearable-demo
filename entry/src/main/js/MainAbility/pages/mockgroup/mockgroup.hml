@@ -2,8 +2,10 @@
     <!-- Layer 1: the group's details, scrollable -->
     <list class="lst" ref="listRef">
         <list-item class="head-item">
-            <text class="{{ sideClass }}">{{ title }}</text>
-            <text class="{{ netClass }}">{{ netText }}</text>
+            <text class="side-title buy" show="{{ isBuy }}">{{ title }}</text>
+            <text class="side-title sell" show="{{ isSell }}">{{ title }}</text>
+            <text class="head-net up" show="{{ netUp }}">{{ netText }}</text>
+            <text class="head-net down" show="{{ netDown }}">{{ netText }}</text>
             <text class="head-sub">{{ lotsText }}</text>
         </list-item>
         <list-item for="{{ facts }}" class="fact-item">
@@ -20,7 +22,8 @@
                     <text class="layer-entry">{{ $item.entry }}</text>
                     <text class="layer-sub">{{ $item.sub }}</text>
                 </div>
-                <text class="{{ $item.netClass }}">{{ $item.net }}</text>
+                <text class="layer-net up" show="{{ $item.up }}">{{ $item.net }}</text>
+                <text class="layer-net down" show="{{ $item.down }}">{{ $item.net }}</text>
             </div>
         </list-item>
         <list-item class="btn-item">

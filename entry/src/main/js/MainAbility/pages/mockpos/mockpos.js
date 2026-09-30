@@ -76,12 +76,13 @@ export default {
                 var g = GROUPS[i];
                 var n = groupNet(g);
                 rows.push({
-                    sideShort: g.side === 'BUY' ? 'B' : 'S',
-                    sideClass: g.side === 'BUY' ? 'side buy' : 'side sell',
+                    buy: g.side === 'BUY',
+                    sell: g.side !== 'BUY',
                     symbol: g.symbol,
                     lots: groupLots(g).toFixed(2) + (g.layers.length > 1 ? ' ×' + g.layers.length : ''),
                     net: money(n),
-                    netClass: n >= 0 ? 'net up' : 'net down'
+                    up: n >= 0,
+                    down: n < 0
                 });
             }
         }

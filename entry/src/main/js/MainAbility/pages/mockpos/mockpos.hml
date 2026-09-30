@@ -23,12 +23,14 @@
         </list-item>
         <list-item for="{{ rows }}" class="row-item" onclick="openGroup({{ $idx }})">
             <div class="row">
-                <text class="{{ $item.sideClass }}">{{ $item.sideShort }}</text>
+                <text class="side buy" show="{{ $item.buy }}">B</text>
+                <text class="side sell" show="{{ $item.sell }}">S</text>
                 <div class="row-mid">
                     <text class="sym">{{ $item.symbol }}</text>
                     <text class="lots">{{ $item.lots }}</text>
                 </div>
-                <text class="{{ $item.netClass }}">{{ $item.net }}</text>
+                <text class="net up" show="{{ $item.up }}">{{ $item.net }}</text>
+                <text class="net down" show="{{ $item.down }}">{{ $item.net }}</text>
             </div>
         </list-item>
         <list-item class="empty-item" show="{{ isEmpty }}">

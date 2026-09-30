@@ -6,12 +6,16 @@
         </list-item>
         <list-item for="{{ bots }}" class="bot-item" onclick="openBot({{ $idx }})">
             <div class="bot">
-                <text class="{{ $item.dotClass }}">●</text>
+                <text class="dot running" show="{{ $item.running }}">●</text>
+                <text class="dot starting" show="{{ $item.starting }}">●</text>
+                <text class="dot offline" show="{{ $item.offline }}">●</text>
+                <text class="dot stopped" show="{{ $item.stopped }}">●</text>
                 <div class="bot-mid">
                     <text class="bot-sym">{{ $item.symbol }}</text>
                     <text class="bot-sub">{{ $item.sub }}</text>
                 </div>
-                <text class="{{ $item.netClass }}">{{ $item.net }}</text>
+                <text class="bot-net up" show="{{ $item.up }}">{{ $item.net }}</text>
+                <text class="bot-net down" show="{{ $item.down }}">{{ $item.net }}</text>
             </div>
         </list-item>
         <list-item class="spacer"></list-item>

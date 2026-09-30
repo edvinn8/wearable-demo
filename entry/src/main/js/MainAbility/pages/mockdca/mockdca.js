@@ -19,10 +19,14 @@ export default {
             var inPos = b.position !== 'flat';
             bots.push({
                 symbol: b.symbol,
-                dotClass: 'dot ' + b.state,
+                running: b.state === 'running',
+                starting: b.state === 'starting',
+                offline: b.state === 'offline',
+                stopped: b.state === 'stopped',
                 sub: b.state + (inPos ? ' · ' + b.position : ''),
                 net: inPos ? money(b.net) : '',
-                netClass: b.net >= 0 ? 'bot-net up' : 'bot-net down'
+                up: b.net >= 0,
+                down: b.net < 0
             });
         }
         this.bots = bots;
