@@ -1,0 +1,23 @@
+<div class="page" onswipe="swipe">
+    <list class="list" ref="listRef">
+        <list-item class="heading">
+            <text class="title">Lights</text>
+            <text class="subtitle">{{ status }}</text>
+        </list-item>
+        <list-item for="{{ lights }}" class="light">
+            <text class="name">{{ $item.name }}</text>
+            <div class="buttons">
+                <input class="on" type="button" value="On" show="{{ !busy && $item.on }}" onclick="setLight({{ $idx }}, 'on')"></input>
+                <text class="inactive-on" show="{{ busy || !$item.on }}">On</text>
+                <input class="off" type="button" value="Off" show="{{ !busy && $item.off }}" onclick="setLight({{ $idx }}, 'off')"></input>
+                <text class="inactive-off" show="{{ busy || !$item.off }}">Off</text>
+            </div>
+            <text class="result">{{ $item.status }}</text>
+        </list-item>
+        <list-item class="footer">
+            <input class="refresh" type="button" value="Refresh" onclick="refresh"></input>
+            <input class="back" type="button" value="Back" onclick="back"></input>
+        </list-item>
+        <list-item class="spacer"></list-item>
+    </list>
+</div>

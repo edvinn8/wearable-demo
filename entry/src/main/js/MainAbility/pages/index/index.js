@@ -26,6 +26,9 @@ export default {
     goP2p() {
         router.replace({ uri: 'pages/p2p/p2p' });
     },
+    goLights() {
+        router.replace({ uri: 'pages/lights/lights' });
+    },
     appExit() {
         app.terminate();
     },

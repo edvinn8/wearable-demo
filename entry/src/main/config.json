@@ -3,8 +3,8 @@
     "bundleName": "com.edvinn.firstwearableapplication",
     "vendor": "example",
     "version": {
-      "code": 1000007,
-      "name": "1.0.7"
+      "code": 1000008,
+      "name": "1.0.8"
     }
   },
   "deviceConfig": {},
@@ -33,6 +33,7 @@
         "pages": [
           "pages/positions/positions",
           "pages/index/index",
+          "pages/lights/lights",
           "pages/p2p/p2p",
           "pages/mockhub/mockhub",
           "pages/mockpos/mockpos",
