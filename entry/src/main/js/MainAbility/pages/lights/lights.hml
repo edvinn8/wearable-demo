@@ -16,7 +16,7 @@
         </list-item>
         <list-item class="footer">
             <input class="refresh" type="button" value="Refresh" onclick="refresh"></input>
-            <input class="back" type="button" value="Back" onclick="back"></input>
+            <input class="back" type="button" value="Tools" onclick="back"></input>
         </list-item>
         <list-item class="spacer"></list-item>
     </list>

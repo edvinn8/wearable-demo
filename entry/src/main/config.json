@@ -3,8 +3,8 @@
     "bundleName": "com.edvinn.firstwearableapplication",
     "vendor": "example",
     "version": {
-      "code": 1000008,
-      "name": "1.0.8"
+      "code": 1000009,
+      "name": "1.0.9"
     }
   },
   "deviceConfig": {},
@@ -31,17 +31,9 @@
     "js": [
       {
         "pages": [
-          "pages/positions/positions",
-          "pages/index/index",
           "pages/lights/lights",
-          "pages/p2p/p2p",
-          "pages/mockhub/mockhub",
-          "pages/mockpos/mockpos",
-          "pages/mockgroup/mockgroup",
-          "pages/mockdca/mockdca",
-          "pages/mockbot/mockbot",
-          "pages/mockacct/mockacct",
-          "pages/mockstates/mockstates"
+          "pages/index/index",
+          "pages/p2p/p2p"
         ],
         "name": ".MainAbility"
       }

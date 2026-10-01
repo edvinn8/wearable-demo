@@ -1,10 +1,12 @@
-# Current handover — 2026-09-30
+# Current handover — Firebase lights, 2026-10-01
 
-**Active development moved to `../matchday-scores`, branch `codex/companion-port`. Read `../matchday-scores/HANDOVER.md` first.** All ten watch screens were ported onto the working Matchday transport alongside the phone app's Firebase/positions functionality. Both packages display as Wear Companion 1.1.0 while retaining the approved Matchday identities.
+Active work is in the original pair again, branch `codex/firebase-lights-config`: wearable-demo 1.0.9 / wear-companion 0.1.5. The user confirmed the original pair now connects following authorization propagation. A fixed 24-hour cache TTL is not established.
 
-This branch (`codex/wear-companion-link`) preserves the original watch's native API selection, receiver ordering, timeout and supportLists fixes. The original phone app still hit Huawei scope-unauthorized code 8; the user chose the port rather than further investigating that identity. Keep this repository as a donor/reference. Its mock controls remain simulations, and no real trading commands were added by the port.
+Lights is the launch page. Only Lights, Tools/index and P2P remain; positions and trading mocks are removed. Phone configuration comes from authenticated Firestore `lights-config/{uid}`, editable in EDOS Dashboard → Admin → Lights Config. Read README.md and `../../edos-dashboard/docs/lights-config.md` for setup and checks. The separate Matchday Scores pair is unchanged.
 
-The sections below are historical investigation notes. Their old “next check”/“pending” instructions are superseded by the active repository's handover and device checklist.
+Keep package identity, native system imports, registered peer fingerprint, receiver-before-request ordering and explicit On/Off request correlation. Refresh replaces the catalogue; no scene IDs reach the watch. Tools/P2P remain reachable. Tests/build/signature checks are local evidence; install/round-trip checks with these new versions are pending.
+
+The notes below are historical. Earlier donor-only status, trading goals and proposed investigation steps are superseded.
 
 ---
 

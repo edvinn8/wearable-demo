@@ -100,3 +100,13 @@ test('lights cleans up timers and ignores callbacks after leaving the page', () 
     x.reply({ t: 'lightres', id: x.last().id, l: 'office', a: 'on', ok: true, m: 'late' });
     assert.equal(x.p.lights[1].status, status); x.ready(); assert.equal(x.sent.length, 2);
 });
+
+test('refresh replaces removed lights and a rapid phone response cancels its timeout', () => {
+    const x = page(); x.ready(); catalogue(x); assert.equal(x.p.lights.length, 2);
+    x.native.sendMsg = o => {
+        const request = JSON.parse(o.message); o.success();
+        x.reply({ t: 'lights', id: request.id, p: 0, last: true, l: [] });
+    };
+    x.p.refresh(); assert.equal(x.p.lights.length, 0); assert.equal(x.timers.size, 0); assert.equal(x.p.busy, false);
+    assert.match(x.p.status, /No lights configured/); x.p.onDestroy();
+});

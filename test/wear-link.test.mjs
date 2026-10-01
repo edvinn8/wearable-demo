@@ -68,40 +68,6 @@ test('native registration failure retains its original code in logs', () => {
     assert.ok(logs.some(line => line.includes('subscribeMsg') && line.includes('123') && line.includes('denied')));
 });
 
-function positionsPage() {
-    const { context, native, calls } = runtime(false);
-    let nextTimer = 1;
-    const timers = new Set();
-    const answerTimers = new Set();
-    Object.assign(context, {
-        router: {}, app: {}, PHONE_PKG: 'com.edvinn.wearcompanion', PHONE_FINGERPRINT: 'test',
-        setInterval() { const id = nextTimer++; timers.add(id); return id; },
-        clearInterval(id) { timers.delete(id); },
-        setTimeout() { const id = nextTimer++; answerTimers.add(id); return id; },
-        clearTimeout(id) { answerTimers.delete(id); },
-    });
-    const source = readFileSync(new URL('pages/positions/positions.js', main), 'utf8')
-        .replace(/^import .*;\s*$/gm, '').replace('export default', 'var page =');
-    vm.runInContext(source, context);
-    const page = context.page;
-    Object.assign(page, page.data);
-    return { page, native, calls, timers, answerTimers };
-}
-
-test('positions waits for its receiver before requesting data', () => {
-    const { page, native, calls, timers } = positionsPage();
-    assert.doesNotThrow(() => page.onInit());
-    assert.equal(calls.filter(c => c === 'send').length, 0);
-    native.receiver.success({ isRegister: true });
-    assert.equal(calls.filter(c => c === 'send').length, 1);
-    assert.equal(native.lastSent.message, '{"t":"get"}');
-    assert.equal(timers.size, 1);
-    page.onDestroy();
-    assert.equal(timers.size, 0);
-    native.receiver.success({ isRegister: true });
-    assert.equal(calls.filter(c => c === 'send').length, 1, 'late registration must not restart a destroyed page');
-});
-
 test('watch installation declares its phone peer in supportLists', () => {
     const config = JSON.parse(readFileSync(new URL('../entry/src/main/config.json', import.meta.url)));
     const metadata = config.module.metaData?.customizeData || [];
@@ -109,17 +75,4 @@ test('watch installation declares its phone peer in supportLists', () => {
     const pkg = peer.match(/PHONE_PKG = '([^']+)'/)[1];
     const fingerprint = peer.match(/PHONE_FINGERPRINT = '([^']+)'/)[1];
     assert.equal(metadata.find(item => item.name === 'supportLists')?.value, `${pkg}:${fingerprint}`);
-});
-
-test('a fast phone reply cannot leave a false connection timeout armed', () => {
-    const { page, native, answerTimers } = positionsPage();
-    native.sendMsg = options => {
-        options.success();
-        native.receiver.success({ message: '{"t":"err","m":"Sign in on the phone"}' });
-    };
-    page.onInit();
-    native.receiver.success({ isRegister: true });
-    assert.equal(page.msg, 'Sign in on the phone');
-    assert.equal(answerTimers.size, 0);
-    page.onDestroy();
 });
