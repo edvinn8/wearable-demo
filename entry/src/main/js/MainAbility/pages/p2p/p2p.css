@@ -25,7 +25,7 @@
   color: #b8c4d0;
   text-align: center;
   width: 300px;
-  height: 56px;
+  height: 72px;
 }
 .b {
   font-size: 20px;
@@ -36,10 +36,6 @@
   text-color: #ffffff;
   border-radius: 21px;
 }
-.e {
-  font-size: 16px;
-  color: #8aa0b8;
-  text-align: center;
-  width: 280px;
-  height: 24px;
+.back {
+  background-color: #3a4450;
 }

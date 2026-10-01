@@ -1,0 +1,41 @@
+<div class="page" onswipe="onSwipe">
+    <!-- Vertical cards, so a right swipe still means "back" like everywhere else. -->
+    <swiper class="sw" vertical="true" loop="false">
+        <div class="card">
+            <text class="card-label">EQUITY · {{ cur }}</text>
+            <text class="big">{{ equity }}</text>
+            <text class="line">{{ balanceLine }}</text>
+            <text class="line">{{ freeLine }}</text>
+            <text class="hint">swipe up for more</text>
+        </div>
+        <div class="card">
+            <text class="card-label">TODAY</text>
+            <text class="big-up" show="{{ todayUp }}">{{ today }}</text>
+            <text class="big-down" show="{{ todayDown }}">{{ today }}</text>
+            <text class="card-label gap">THIS WEEK</text>
+            <text class="big-up" show="{{ weekUp }}">{{ week }}</text>
+            <text class="big-down" show="{{ weekDown }}">{{ week }}</text>
+        </div>
+        <div class="card">
+            <text class="card-label">MARGIN LEVEL</text>
+            <stack class="gauge">
+                <progress class="arc" type="arc" percent="{{ gaugePercent }}"></progress>
+                <div class="gauge-center">
+                    <text class="gauge-value">{{ ml }}</text>
+                    <text class="gauge-sub">{{ marginLine }}</text>
+                </div>
+            </stack>
+        </div>
+        <div class="card">
+            <text class="card-label">EQUITY · 12 H</text>
+            <chart class="chart" type="line" options="{{ chartOptions }}" datasets="{{ chartData }}"></chart>
+            <text class="line">{{ curveLine }}</text>
+        </div>
+        <div class="card">
+            <text class="card-label">SOURCE</text>
+            <text class="line">{{ sourceLine }}</text>
+            <text class="line">{{ ageLine }}</text>
+            <input class="btn btn-gray gap" type="button" value="Back" onclick="back"></input>
+        </div>
+    </swiper>
+</div>

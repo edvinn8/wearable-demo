@@ -1,0 +1,25 @@
+<stack class="page" onswipe="onSwipe">
+    <div class="center">
+        <text class="dot running" show="{{ isRunning }}">●</text>
+        <text class="dot starting" show="{{ isStarting }}">●</text>
+        <text class="dot offline" show="{{ isOffline }}">●</text>
+        <text class="dot stopped" show="{{ isStopped }}">●</text>
+        <text class="bot-title">{{ symbol }}</text>
+        <text class="bot-state">{{ stateText }}</text>
+        <text class="bot-pos">{{ posText }}</text>
+        <text class="bot-net up" show="{{ netUp }}">{{ netText }}</text>
+        <text class="bot-net down" show="{{ netDown }}">{{ netText }}</text>
+        <text class="bot-hint">{{ hint }}</text>
+        <input class="btn btn-red" type="button" value="Stop" onclick="ask" show="{{ canStop }}"></input>
+        <input class="btn" type="button" value="Start" onclick="ask" show="{{ canStart }}"></input>
+    </div>
+
+    <!-- Overlay: confirm, then the result -->
+    <div class="overlay" show="{{ overlay }}">
+        <text class="sheet-title">{{ confirmTitle }}</text>
+        <text class="sheet-text">{{ confirmText }}</text>
+        <input class="btn" type="button" value="{{ confirmLabel }}" onclick="confirm" show="{{ asking }}"></input>
+        <input class="btn btn-gray sheet-gap" type="button" value="Cancel" onclick="cancel" show="{{ asking }}"></input>
+        <input class="btn" type="button" value="OK" onclick="back" show="{{ doneStep }}"></input>
+    </div>
+</stack>

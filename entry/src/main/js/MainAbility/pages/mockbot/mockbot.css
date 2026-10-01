@@ -1,0 +1,147 @@
+.page {
+  flex-direction: column;
+  align-items: center;
+  width: 466px;
+  height: 466px;
+  background-color: #000000;
+}
+.lst {
+  width: 466px;
+  height: 466px;
+}
+.title-item {
+  width: 466px;
+  height: 110px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+.title {
+  font-size: 30px;
+  color: #8aa0b8;
+  text-align: center;
+  width: 300px;
+  height: 40px;
+}
+.spacer {
+  width: 466px;
+  height: 110px;
+}
+.up {
+  color: #4ade80;
+}
+.down {
+  color: #f87171;
+}
+.muted {
+  color: #8a94a1;
+}
+.btn {
+  font-size: 30px;
+  width: 240px;
+  height: 60px;
+  border-radius: 30px;
+  background-color: #1f6feb;
+  text-color: #ffffff;
+}
+.btn-red {
+  background-color: #dc2626;
+}
+.btn-gray {
+  background-color: #3a4450;
+}
+.btn-item {
+  width: 466px;
+  height: 80px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.center {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 466px;
+  height: 466px;
+}
+.dot {
+  font-size: 30px;
+  width: 60px;
+  height: 40px;
+  text-align: center;
+}
+.running {
+  color: #4ade80;
+}
+.starting {
+  color: #f59e0b;
+}
+.offline {
+  color: #f87171;
+}
+.stopped {
+  color: #4b5563;
+}
+.bot-title {
+  font-size: 38px;
+  color: #ffffff;
+  width: 300px;
+  height: 52px;
+  text-align: center;
+}
+.bot-state {
+  font-size: 30px;
+  color: #b8c4d0;
+  width: 300px;
+  height: 42px;
+  text-align: center;
+}
+.bot-pos {
+  font-size: 24px;
+  color: #8a94a1;
+  width: 320px;
+  height: 34px;
+  text-align: center;
+}
+.bot-net {
+  font-size: 30px;
+  width: 300px;
+  height: 42px;
+  text-align: center;
+}
+.bot-hint {
+  font-size: 24px;
+  color: #f59e0b;
+  width: 320px;
+  height: 64px;
+  text-align: center;
+  margin-bottom: 8px;
+}
+.overlay {
+  width: 466px;
+  height: 466px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #000000;
+  opacity: 0.95;
+}
+.sheet-title {
+  font-size: 30px;
+  color: #ffffff;
+  width: 340px;
+  height: 44px;
+  text-align: center;
+}
+.sheet-text {
+  font-size: 24px;
+  color: #b8c4d0;
+  width: 320px;
+  height: 100px;
+  text-align: center;
+  margin-bottom: 12px;
+}
+.sheet-gap {
+  margin-top: 12px;
+}

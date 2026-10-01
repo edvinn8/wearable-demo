@@ -1,0 +1,14 @@
+<div class="page" onswipe="onSwipe">
+    <list class="lst" ref="listRef">
+        <list-item class="title-item">
+            <text class="title">States</text>
+        </list-item>
+        <list-item for="{{ states }}" class="st-item" onclick="open({{ $idx }})">
+            <div class="st">
+                <text class="st-label">{{ $item.label }}</text>
+                <text class="st-sub">{{ $item.sub }}</text>
+            </div>
+        </list-item>
+        <list-item class="spacer"></list-item>
+    </list>
+</div>

@@ -1,8 +1,6 @@
 <div class="container">
-    <progress class="progressArc" type="arc" percent="{{ progressNumber }}"></progress>
-    <text class="progress-text">{{ progressNumber }}%</text>
-    <input class="updateBtn" type="button" value="Update" onclick="updateProgress"></input>
-
-    <input class="updateBtn" type="button" value="HTTP test" onclick="goNet"></input>
-    <text class="version-text">v1.0.2 — NETTEST</text>
+    <input class="updateBtn" type="button" value="Positions" onclick="goPositions"></input>
+    <input class="updateBtn" type="button" value="P2P test" onclick="goP2p"></input>
+    <input class="updateBtn" type="button" value="Mock UI" onclick="goMock"></input>
+    <text class="version-text">v1.0.6 — tools</text>
 </div>

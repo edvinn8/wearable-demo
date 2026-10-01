@@ -3,8 +3,8 @@
     "bundleName": "com.edvinn.firstwearableapplication",
     "vendor": "example",
     "version": {
-      "code": 1000002,
-      "name": "1.0.2"
+      "code": 1000007,
+      "name": "1.0.7"
     }
   },
   "deviceConfig": {},
@@ -31,23 +31,28 @@
     "js": [
       {
         "pages": [
+          "pages/positions/positions",
           "pages/index/index",
-          "pages/nettest/nettest"
+          "pages/p2p/p2p",
+          "pages/mockhub/mockhub",
+          "pages/mockpos/mockpos",
+          "pages/mockgroup/mockgroup",
+          "pages/mockdca/mockdca",
+          "pages/mockbot/mockbot",
+          "pages/mockacct/mockacct",
+          "pages/mockstates/mockstates"
         ],
         "name": ".MainAbility"
       }
     ],
-    "reqPermissions": [
-      {
-        "name": "ohos.permission.INTERNET",
-        "usedScene": {
-          "ability": [
-            "MainAbility"
-          ],
-          "when": "always"
-        },
-        "reason": "$string:reqPermissions"
-      }
-    ]
+    "metaData": {
+      "customizeData": [
+        {
+          "name": "supportLists",
+          "value": "com.edvinn.wearcompanion:73A6B25A06E39EBAA6D14E4A0F53540AF225E4CF182A533EEEE9D1034CDA2FCF",
+          "extra": ""
+        }
+      ]
+    }
   }
 }
