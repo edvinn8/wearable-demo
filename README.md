@@ -17,3 +17,17 @@ Build the signed HAP through the existing DevEco Studio configuration; retain th
 ```
 
 The tests exercise the real page/native wrapper: receiver readiness, catalogue chunks, Refresh replacement, command correlation, duplicate taps, failures, timeouts and cleanup. Compiled bundles must also pass the JerryScript verifier used by Matchday Scores. Transfer the signed HAP manually; physical validation is separate from local tests.
+
+## Huawei Lite timer and vibration lesson
+
+GT 6 device testing in the sibling Matchday Scores watch app (2.3.5, 2026-10-07)
+confirmed that chained Short vibrations work through ten buzzes, including patterns
+longer than two seconds. Scheduling all buzz timeouts upfront had truncated patterns
+and apparently starved the later alert-dismissal timer. The exact timer limit is inferred,
+not documented. This Lights app currently has no vibration sequences to migrate.
+
+For future patterns, request a buzz and schedule only the next one. Do not wait for the
+native success callback as if it indicated motor completion. Reserve alert dismissal
+separately, check timer allocation, and cancel/revision-guard callbacks on hide, exit or
+failure. See [the detailed findings and rules](../matchday-scores/docs/WATCH-VIBRATIONS.md)
+in the sibling checkout.
