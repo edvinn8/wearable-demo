@@ -1,6 +1,5 @@
 <div class="container" onswipe="touchMove">
     <input class="updateBtn" type="button" value="Lights" onclick="goLights"></input>
-    <input class="updateBtn" type="button" value="P2P test" onclick="goP2p"></input>
     <input class="updateBtn" type="button" value="Exit" onclick="appExit"></input>
-    <text class="version-text">v1.0.9 — tools</text>
+    <text class="version-text">{{ version }}</text>
 </div>

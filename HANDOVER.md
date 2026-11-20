@@ -1,3 +1,9 @@
+# Current handover — menu cleanup, 2026-11-20
+
+wearable-demo 1.0.11: the P2P test page and the unused `common/format.js` / `common/mock.js` are removed. The main menu has Lights and Exit and shows the version from `config.json` via `app.getInfo()` (no hard-coded version anywhere in the source). The Lights page's bottom button is now **Back**. Tests: 21 pass, including `test/menu.test.mjs`.
+
+---
+
 # Current handover — lights through EDOS Dashboard setLight, 2026-11-20
 
 Wear Companion 0.1.6 / wearable-demo 1.0.10. The phone no longer uses `lights-config` scene webhooks: it reads the household `light-states/{EDO_UID}` and the account's `light-prefs/{uid}` from Firestore and switches through the dashboard's `setLight` callable (eWeLink Cloud API), up to four at once. The watch shows one toggle per light (On / Off / Offline / ?), flips it at once and corrects it from the phone's reply. Protocol and behaviour: `wear-companion/README.md`, `wearable-demo/README.md`, `edos-dashboard/docs/light-states.md`.

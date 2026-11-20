@@ -218,6 +218,7 @@ export default {
         }
         inflight = {};
     },
+    // Back (or swipe right) returns to the main menu.
     back() {
         router.replace({ uri: 'pages/index/index' });
     },

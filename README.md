@@ -1,10 +1,10 @@
-# wearable-demo — lights 1.0.10
+# wearable-demo — lights
 
 The original watch package `com.edvinn.firstwearableapplication` opens **Lights** directly. It loads the list from the signed-in Wear Companion phone 0.1.6, which reads EDOS Dashboard's `light-states` and switches through the dashboard's `setLight` function (see `../wear-companion/README.md`). The watch receives only light IDs, names, room labels and states.
 
 Each row shows the light's name, its room (or the latest message) and one toggle: **On** (amber), **Off** (grey), or a disabled **Offline** / **?**. A tap flips the toggle at once (shown with "…") and sends the opposite action; the phone's reply confirms it, keeps it with "not confirmed yet", or puts it back with the reason. Several lights can switch at once; the same light ignores taps until its reply arrives. No reply within 20 s marks the light **?** (outcome unknown) until a Refresh. Nothing is retried automatically.
 
-**Tools** or swipe right opens diagnostics. Tools offers Lights, P2P test and Exit. Native Wear Engine imports, registered peer identity and receiver-before-request ordering are retained.
+**Back** or swipe right opens the main menu: **Lights** and **Exit**, with room for more features, and the installed version below them. The version is set only in `entry/src/main/config.json` (`app.version`); the menu reads it at runtime with `@system.app.getInfo()`. Native Wear Engine imports, registered peer identity and receiver-before-request ordering are retained.
 
 Choose which lights appear in **EDOS Dashboard → Lights → settings** (the same choice as the dashboard page). No private lights file is bundled into either app.
 
