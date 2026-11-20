@@ -2,26 +2,42 @@ import router from '@system.router';
 import { P2pClient, Message, Builder } from '../../common/wearengine.js';
 import { PHONE_PKG, PHONE_FINGERPRINT } from '../../common/peer.js';
 
-// Phone owns the catalogue and credentials. Success is a webhook acknowledgement, not sensed state.
+// The phone reads the household light states from EDOS Dashboard and switches through its setLight
+// function. A tap flips the light here at once; the phone's reply confirms it or puts it back.
+// Several lights can switch at once; the same light ignores taps until its reply arrives.
 var client = null;
-var answerTimer = null;
-var pending = null;
-var sequence = 0;
-var cataloguePage = 0;
-var catalogueFrames = {};
 var ready = false;
+var sequence = 0;
+var catalogue = null;   // { id, page, frames, timer } while a list request is open
+var inflight = {};      // request id -> { light, action, previous, timer }
 var TIMEOUT_MS = 20000;
+
+var LABELS = { on: 'On', off: 'Off', offline: 'Offline', unknown: '?' };
+
+function row(id, name, room, state, pending, note) {
+    return {
+        id: id, name: name, room: room, state: state, pending: pending, note: note,
+        label: pending ? LABELS[state] + '…' : LABELS[state],
+        isOn: state === 'on', isOff: state === 'off', isOther: state !== 'on' && state !== 'off',
+        line: note || room
+    };
+}
+
+function validState(s) {
+    return s === 'on' || s === 'off' || s === 'offline' || s === 'unknown';
+}
 
 export default {
     data: {
         lights: [],
-        busy: true,
+        loading: true,
         status: 'Connecting to phone…'
     },
     onInit() {
         var self = this;
         ready = false;
-        pending = null;
+        catalogue = null;
+        inflight = {};
         client = new P2pClient();
         var visit = client;
         client.setPeerPkgName(PHONE_PKG);
@@ -34,7 +50,7 @@ export default {
             },
             onFailure: function () {
                 if (client !== visit) return;
-                self.busy = true;
+                self.loading = true;
                 self.status = 'Can\'t listen to phone';
             },
             onReceiveMessage: function (message) {
@@ -47,8 +63,7 @@ export default {
         this.$refs.listRef.rotation({ focus: true });
     },
     onDestroy() {
-        this.clearTimer();
-        pending = null;
+        this.clearTimers();
         ready = false;
         if (client) {
             var previous = client;
@@ -56,20 +71,15 @@ export default {
             previous.unregisterReceiver({ onSuccess: function () {} });
         }
     },
-    request(request, index) {
-        if (!client || !ready || pending) return;
+    // Sends one request with its own timeout; onLost runs if it can't be delivered or gets no reply.
+    send(request, onLost) {
         sequence = sequence + 1;
         request.id = 'l' + new Date().getTime() + '-' + sequence;
-        pending = { id: request.id, type: request.t, index: index, light: request.l, action: request.a };
-        this.busy = true;
-        var self = this;
-        var visit = client;
         var id = request.id;
+        var visit = client;
         // Arm before sending: a fast reply must be able to cancel the timer.
-        answerTimer = setTimeout(function () {
-            if (client === visit && pending && pending.id === id) {
-                self.finish('No phone reply — outcome unknown');
-            }
+        var timer = setTimeout(function () {
+            if (client === visit) onLost(id, 'No phone reply — outcome unknown');
         }, TIMEOUT_MS);
         var builder = new Builder();
         builder.setDescription(JSON.stringify(request));
@@ -80,92 +90,133 @@ export default {
             onFailure: function () {},
             onSendProgress: function () {},
             onSendResult: function (result) {
-                if (client === visit && pending && pending.id === id && result.code != 207) {
-                    self.finish('Not sent — phone unavailable');
-                }
+                if (client === visit && result.code != 207) onLost(id, 'Not sent — phone unavailable');
             }
         });
+        return { id: id, timer: timer };
     },
     refresh() {
-        if (!ready || pending) return;
-        cataloguePage = 0;
-        catalogueFrames = {};
+        if (!client || !ready || catalogue) return;
+        var self = this;
+        this.loading = true;
         this.status = 'Loading lights…';
-        this.request({ t: 'lights' }, -1);
+        catalogue = { id: null, page: 0, frames: {}, timer: null };
+        var sent = this.send({ t: 'lights' }, function (id, message) {
+            // id is still null here when delivery fails before send() returns.
+            if (catalogue && (catalogue.id === id || catalogue.id === null)) self.endCatalogue(message);
+        });
+        // A delivery failure may already have ended it.
+        if (catalogue && catalogue.id === null) {
+            catalogue.id = sent.id;
+            catalogue.timer = sent.timer;
+        } else {
+            clearTimeout(sent.timer);
+        }
     },
-    setLight(index, action) {
-        if (this.busy || !ready || pending || index < 0 || index >= this.lights.length) return;
+    endCatalogue(message) {
+        if (!catalogue) return;
+        if (catalogue.timer !== null) clearTimeout(catalogue.timer);
+        catalogue = null;
+        this.loading = false;
+        this.status = message;
+    },
+    toggle(index) {
+        if (!client || !ready || index < 0 || index >= this.lights.length) return;
         var light = this.lights[index];
-        if ((action !== 'on' && action !== 'off') || !light[action]) return;
-        this.setStatus(index, action === 'on' ? 'Sending On…' : 'Sending Off…');
-        this.status = 'Waiting for phone…';
-        this.request({ t: 'light', l: light.id, a: action }, index);
-    },
-    onReply(text) {
-        if (!pending) return;
-        var reply;
-        try { reply = JSON.parse(text); } catch (e) { return; }
-        if (!reply || reply.id !== pending.id) return;
-        if (pending.type === 'lights' && reply.t === 'lights') {
-            if (reply.ok === false) {
-                this.lights = [];
-                this.finish(reply.m || 'Lights configuration error');
-                return;
-            }
-            if (typeof reply.p !== 'number' || reply.p < cataloguePage || Math.floor(reply.p) !== reply.p
-                    || !Array.isArray(reply.l) || typeof reply.last !== 'boolean') return;
-            if (catalogueFrames[reply.p]) return;
-            var rows = [];
-            var i;
-            for (i = 0; i < reply.l.length; i++) {
-                var row = reply.l[i];
-                if (!row || typeof row.id !== 'string' || typeof row.n !== 'string'
-                        || typeof row.on !== 'boolean' || typeof row.off !== 'boolean') return;
-                rows.push({ id: row.id, name: row.n, on: row.on, off: row.off,
-                    status: row.on || row.off ? 'Choose On or Off' : 'Not configured' });
-            }
-            // Wear Engine sends asynchronously; keep future pages until their predecessors arrive.
-            catalogueFrames[reply.p] = { rows: rows, last: reply.last };
-            while (catalogueFrames[cataloguePage]) {
-                var frame = catalogueFrames[cataloguePage];
-                delete catalogueFrames[cataloguePage];
-                this.lights = cataloguePage === 0 ? frame.rows : this.lights.concat(frame.rows);
-                cataloguePage = cataloguePage + 1;
-                if (frame.last) {
-                    this.finish(this.lights.length ? 'Phone executes each request' : 'No lights configured');
-                    break;
-                }
-            }
+        if (light.pending || (light.state !== 'on' && light.state !== 'off')) return;
+        var action = light.state === 'on' ? 'off' : 'on';
+        var self = this;
+        this.update(light.id, action, true, '');
+        var entry = { light: light.id, action: action, previous: light.state, timer: null, done: false };
+        var sent = this.send({ t: 'light', l: light.id, a: action }, function (id, message) {
+            var lost = inflight[id];
+            if (!lost) { entry.done = true; entry.message = message; return; }
+            delete inflight[id];
+            clearTimeout(lost.timer);
+            // Not delivered: nothing changed. No reply: the light may or may not have switched.
+            self.update(lost.light, message.indexOf('Not sent') === 0 ? lost.previous : 'unknown', false, message);
+            self.status = message;
+        });
+        if (entry.done) {
+            // Delivery failed before send() returned.
+            clearTimeout(sent.timer);
+            this.update(light.id, entry.previous, false, entry.message);
+            this.status = entry.message;
             return;
         }
-        if (pending.type === 'light' && reply.t === 'lightres' && reply.l === pending.light
-                && reply.a === pending.action && typeof reply.ok === 'boolean' && typeof reply.m === 'string') {
-            this.finish(reply.m);
+        entry.timer = sent.timer;
+        inflight[sent.id] = entry;
+    },
+    onReply(text) {
+        var reply;
+        try { reply = JSON.parse(text); } catch (e) { return; }
+        if (!reply) return;
+        if (reply.t === 'lights' && catalogue && reply.id === catalogue.id) {
+            this.onCatalogue(reply);
+            return;
+        }
+        var entry = reply.t === 'lightres' ? inflight[reply.id] : null;
+        if (!entry || reply.l !== entry.light || reply.a !== entry.action
+                || typeof reply.ok !== 'boolean' || typeof reply.m !== 'string') return;
+        delete inflight[reply.id];
+        clearTimeout(entry.timer);
+        var state = validState(reply.s) ? reply.s : (reply.ok ? entry.action : entry.previous);
+        // A plain confirmation needs no note: the button shows the state.
+        var note = reply.ok && (reply.m === 'On' || reply.m === 'Off') ? '' : reply.m;
+        this.update(entry.light, state, false, note);
+        if (!reply.ok) this.status = reply.m;
+    },
+    onCatalogue(reply) {
+        if (reply.ok === false) {
+            this.lights = [];
+            this.endCatalogue(reply.m || 'Lights unavailable');
+            return;
+        }
+        if (typeof reply.p !== 'number' || reply.p < catalogue.page || Math.floor(reply.p) !== reply.p
+                || !Array.isArray(reply.l) || typeof reply.last !== 'boolean') return;
+        if (catalogue.frames[reply.p]) return;
+        var rows = [];
+        for (var i = 0; i < reply.l.length; i++) {
+            var item = reply.l[i];
+            if (!item || typeof item.id !== 'string' || typeof item.n !== 'string' || !validState(item.s)) return;
+            var room = typeof item.r === 'string' ? item.r : '';
+            var pending = this.pendingAction(item.id);
+            // A light still switching keeps showing what was asked for until its reply arrives.
+            rows.push(row(item.id, item.n, room, pending || item.s, !!pending, ''));
+        }
+        // Wear Engine sends asynchronously; keep future pages until their predecessors arrive.
+        catalogue.frames[reply.p] = { rows: rows, last: reply.last };
+        while (catalogue && catalogue.frames[catalogue.page]) {
+            var frame = catalogue.frames[catalogue.page];
+            delete catalogue.frames[catalogue.page];
+            this.lights = catalogue.page === 0 ? frame.rows : this.lights.concat(frame.rows);
+            catalogue.page = catalogue.page + 1;
+            if (frame.last) {
+                this.endCatalogue(this.lights.length ? 'Tap a light to switch it' : 'No lights to show');
+            }
         }
     },
-    finish(message) {
-        if (!pending) return;
-        var index = pending.index;
-        this.clearTimer();
-        pending = null;
-        catalogueFrames = {};
-        this.busy = false;
-        this.status = message;
-        if (index >= 0) this.setStatus(index, message);
+    pendingAction(lightId) {
+        for (var id in inflight) {
+            if (inflight.hasOwnProperty(id) && inflight[id].light === lightId) return inflight[id].action;
+        }
+        return null;
     },
-    setStatus(index, text) {
+    update(lightId, state, pending, note) {
         var rows = [];
         for (var i = 0; i < this.lights.length; i++) {
-            var row = this.lights[i];
-            rows.push({ id: row.id, name: row.name, on: row.on, off: row.off, status: i === index ? text : row.status });
+            var light = this.lights[i];
+            rows.push(light.id === lightId ? row(light.id, light.name, light.room, state, pending, note) : light);
         }
         this.lights = rows;
     },
-    clearTimer() {
-        if (answerTimer !== null) {
-            clearTimeout(answerTimer);
-            answerTimer = null;
+    clearTimers() {
+        if (catalogue && catalogue.timer !== null) clearTimeout(catalogue.timer);
+        catalogue = null;
+        for (var id in inflight) {
+            if (inflight.hasOwnProperty(id)) clearTimeout(inflight[id].timer);
         }
+        inflight = {};
     },
     back() {
         router.replace({ uri: 'pages/index/index' });

@@ -1,3 +1,11 @@
+# Current handover — lights through EDOS Dashboard setLight, 2026-11-20
+
+Wear Companion 0.1.6 / wearable-demo 1.0.10. The phone no longer uses `lights-config` scene webhooks: it reads the household `light-states/{EDO_UID}` and the account's `light-prefs/{uid}` from Firestore and switches through the dashboard's `setLight` callable (eWeLink Cloud API), up to four at once. The watch shows one toggle per light (On / Off / Offline / ?), flips it at once and corrects it from the phone's reply. Protocol and behaviour: `wear-companion/README.md`, `wearable-demo/README.md`, `edos-dashboard/docs/light-states.md`.
+
+Local evidence only: phone unit tests (17) and communication-log check, watch tests (17), signed HAP 1.0.10 passes the JerryScript verifier, debug APK builds with the AGC keystore. Install on the phone and watch and a round trip are pending. Keep package identity, peer fingerprints and receiver-before-request ordering.
+
+---
+
 # Current handover — Firebase lights, 2026-10-01
 
 Active work is in the original pair again, branch `codex/firebase-lights-config`: wearable-demo 1.0.9 / wear-companion 0.1.5. The user confirmed the original pair now connects following authorization propagation. A fixed 24-hour cache TTL is not established.

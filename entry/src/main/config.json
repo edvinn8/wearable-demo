@@ -3,8 +3,8 @@
     "bundleName": "com.edvinn.firstwearableapplication",
     "vendor": "example",
     "version": {
-      "code": 1000009,
-      "name": "1.0.9"
+      "code": 1000010,
+      "name": "1.0.10"
     }
   },
   "deviceConfig": {},
