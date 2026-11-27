@@ -1,4 +1,6 @@
-# wearable-demo — lights
+# wearable-demo — Híd (lights)
+
+The watch app is called **Híd** ("bridge" in Hungarian), like its phone app; bundle `com.edvinn.firstwearableapplication` is unchanged. Its round icon is the phone app's bridge (`design/hid-icon.svg`; rebuild the PNGs with the `rsvg-convert` lines in that file).
 
 The original watch package `com.edvinn.firstwearableapplication` opens **Lights** directly. It loads the list from the signed-in Wear Companion phone 0.1.6, which reads EDOS Dashboard's `light-states` and switches through the dashboard's `setLight` function (see `../wear-companion/README.md`). The watch receives only light IDs, names, room labels and states.
 

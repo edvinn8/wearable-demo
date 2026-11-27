@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Híd watch app icon: the phone app's bridge (wear-companion res/drawable/ic_launcher_foreground.xml)
+  on a round green face, as GT 6 app icons are round. Same 108-unit artwork, shown through the middle
+  72 units like a circular Android launcher mask. Rebuild the PNGs with:
+    rsvg-convert -w 104 -h 104 design/hid-icon.svg -o entry/src/main/resources/base/media/icon.png
+    rsvg-convert -w 92 -h 92 design/hid-icon.svg -o entry/src/main/resources/base/media/icon_small.png
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="108" height="108" viewBox="18 18 72 72">
+  <defs>
+    <clipPath id="face"><circle cx="54" cy="54" r="36"/></clipPath>
+  </defs>
+  <g clip-path="url(#face)">
+    <rect width="108" height="108" fill="#477050"/>
+    <path fill="#CE2939" d="M0,72 L108,72 L108,108 L0,108 Z"/>
+    <path fill="#FFFFFF" d="M34,36 L41,36 L41,66 L34,66 Z"/>
+    <path fill="#FFFFFF" d="M67,36 L74,36 L74,66 L67,66 Z"/>
+    <path fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" d="M12,52 L37.5,38 Q54,68 70.5,38 L96,52"/>
+    <path fill="#FFFFFF" d="M10,63 L98,63 L98,69 L10,69 Z"/>
+  </g>
+</svg>
