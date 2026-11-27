@@ -9,13 +9,16 @@ const wrapper = readFileSync(new URL('common/wearengine.js', main), 'utf8')
 
 function page() {
     let receiver; const sent = []; const routes = []; const timers = new Map(); let sequence = 0;
+    // The page reads time only through new Date().getTime(); fire() moves it past the 20 s timeout.
+    const clock = { t: 1_000_000 };
+    class FakeDate { getTime() { return clock.t; } }
     const native = {
         getWearEngineVersion(o) { o.complete('5.0.2.401'); },
         setPackageName(o) { o.complete(); }, setFingerprint(o) { o.complete(); },
         unsubscribeMsg() {}, subscribeMsg(o) { receiver = o; },
         sendMsg(o) { sent.push(JSON.parse(o.message)); o.success(); },
     };
-    const context = vm.createContext({ wearengine: native, console, PHONE_PKG: 'phone', PHONE_FINGERPRINT: 'fingerprint',
+    const context = vm.createContext({ wearengine: native, console, Date: FakeDate, PHONE_PKG: 'phone', PHONE_FINGERPRINT: 'fingerprint',
         router: { replace(o) { routes.push(o); } },
         setTimeout(fn) { timers.set(++sequence, fn); return sequence; }, clearTimeout(id) { timers.delete(id); } });
     vm.runInContext(wrapper, context);
@@ -28,7 +31,8 @@ function page() {
     return { p, sent, timers, native, routes,
         ready() { receiver.success({ isRegister: true }); },
         reply(o) { receiver.success({ message: JSON.stringify(o) }); },
-        fire() { const callbacks = [...timers.values()]; timers.clear(); callbacks.forEach(fn => fn()); },
+        fire() { clock.t += 21000; const callbacks = [...timers.values()]; timers.clear(); callbacks.forEach(fn => fn()); },
+        clock,
         last() { return sent.at(-1); } };
 }
 
@@ -37,6 +41,7 @@ const rows = [
     { id: '1001482cd9:0', n: 'Living Room Light', r: 'Livingroom', s: 'off' },
     { id: '100156392c', n: 'Office lights', r: 'Other', s: 'on' },
     { id: '1001563204', n: 'Bathroom Fan', r: '', s: 'offline' },
+    { id: '1001482cd9:1', n: 'Table Lights', r: 'Livingroom', s: 'off' },
 ];
 function catalogue(x) { x.reply({ t: 'lights', id: x.last().id, p: 0, last: true, l: rows }); }
 const light = (x, i) => x.p.lights[i];
@@ -45,11 +50,12 @@ function answer(x, cmd, extra) { x.reply(Object.assign({ t: 'lightres', id: cmd.
 test('lights waits for receiver readiness, then loads the phone list with each light state', () => {
     const x = page(); assert.equal(x.sent.length, 0); x.ready();
     assert.equal(x.last().t, 'lights'); assert.ok(x.last().id); catalogue(x);
-    assert.equal(x.p.lights.length, 3); assert.equal(x.p.loading, false);
+    assert.equal(x.p.lights.length, 4); assert.equal(x.p.loading, false);
     assert.deepEqual(Array.from(x.p.lights, l => [l.name, l.label, l.isOn, l.isOff, l.isOther]), [
         ['Living Room Light', 'Off', false, true, false],
         ['Office lights', 'On', true, false, false],
         ['Bathroom Fan', 'Offline', false, false, true],
+        ['Table Lights', 'Off', false, true, false],
     ]);
     assert.equal(light(x, 0).line, 'Livingroom');
     assert.equal(x.timers.size, 0); x.p.onDestroy();
@@ -161,3 +167,48 @@ test('lights cleans up timers and ignores callbacks after leaving the page', () 
     answer(x, cmd, { ok: true, m: 'Off', s: 'off' });
     assert.equal(JSON.stringify(x.p.lights), before); x.ready(); assert.equal(x.sent.length, 2);
 });
+
+// GT 6 regression: replacing the list's arrays rebuilt every native row and crashed the watch after a
+// couple of taps. Taps and replies must edit the one row in place.
+test('a tap and its reply edit that row in place, never replacing the list', () => {
+    const x = page(); x.ready(); catalogue(x);
+    const lights = x.p.lights; const order = x.p.lightOrder; const living = x.p.lights[0]; const office = x.p.lights[1];
+    assert.deepEqual(Array.from(order), rows.map(r => r.id));
+    x.p.toggle(0); const cmd = x.last();
+    answer(x, cmd, { ok: true, m: 'On', s: 'on' });
+    x.p.toggle(1); answer(x, x.last(), { ok: false, m: 'Dashboard refused the request', s: 'on' });
+    assert.equal(x.p.lights, lights); assert.equal(x.p.lightOrder, order);
+    assert.equal(x.p.lights[0], living); assert.equal(living.isOn, true); assert.equal(living.label, 'On');
+    assert.equal(x.p.lights[1], office); assert.equal(office.line, 'Dashboard refused the request');
+    x.p.onDestroy();
+});
+
+test('the list is shown once, when the last catalogue page arrives', () => {
+    const x = page(); x.ready(); const id = x.last().id;
+    x.reply({ t: 'lights', id, p: 0, last: false, l: [rows[0], rows[1]] });
+    assert.equal(x.p.lights.length, 0); assert.equal(x.p.lightOrder.length, 0); assert.equal(x.p.loading, true);
+    x.reply({ t: 'lights', id, p: 1, last: true, l: [rows[2], rows[3]] });
+    assert.deepEqual(Array.from(x.p.lightOrder), rows.map(r => r.id)); assert.equal(x.p.lights.length, 4);
+    x.p.onDestroy();
+});
+
+test('any number of pending taps share a single timer, cancelled once all replies are in', () => {
+    const x = page(); x.ready(); catalogue(x); assert.equal(x.timers.size, 0);
+    x.p.toggle(0); const a = x.last(); x.p.toggle(1); const b = x.last(); x.p.toggle(3); const c = x.last();
+    assert.equal(x.sent.length, 4); assert.equal(x.timers.size, 1);
+    answer(x, a, { ok: true, m: 'On', s: 'on' }); answer(x, b, { ok: true, m: 'Off', s: 'off' });
+    assert.equal(x.timers.size, 1);
+    answer(x, c, { ok: true, m: 'On', s: 'on' });
+    assert.equal(x.timers.size, 0); x.p.onDestroy();
+});
+
+test('the shared timer expires only the requests that are overdue, then re-arms for the rest', () => {
+    const x = page(); x.ready(); catalogue(x);
+    x.p.toggle(0);
+    x.clock.t += 15000; x.p.toggle(1);
+    // Advance to just past the first deadline: only Living Room Light times out.
+    const callbacks = [...x.timers.values()]; x.timers.clear(); x.clock.t += 5500; callbacks.forEach(fn => fn());
+    assert.equal(light(x, 0).label, '?'); assert.equal(light(x, 1).pending, true); assert.equal(x.timers.size, 1);
+    x.fire(); assert.equal(light(x, 1).label, '?'); assert.equal(x.timers.size, 0); x.p.onDestroy();
+});
+

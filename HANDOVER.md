@@ -1,3 +1,15 @@
+# Current handover — Lights crash after a few taps, 2026-11-27
+
+wearable-demo 1.0.12. The user reported the app crashing on the second or third On/Off tap. Likely cause (same
+class as Matchday 1.6.5's "stable rows"): every tap replaced the whole `lights` array twice (flip, then reply),
+so Lite rebuilt all ~21 native rows each time, and each tap also held its own 20 s timer (GT 6 allows only a
+few). Fix: the list repeats over `lightOrder` (ids) and binds `lights[$idx]`; taps and replies edit one row in
+place; only a reload replaces the arrays, once, after the last page. All requests share one timeout timer.
+25 tests pass, including regressions for row identity, one-shot catalogue rendering and the single timer.
+Not yet confirmed on the watch.
+
+---
+
 # Current handover — menu cleanup, 2026-11-20
 
 wearable-demo 1.0.11: the P2P test page and the unused `common/format.js` / `common/mock.js` are removed. The main menu has Lights and Exit and shows the version from `config.json` via `app.getInfo()` (no hard-coded version anywhere in the source). The Lights page's bottom button is now **Back**. Tests: 21 pass, including `test/menu.test.mjs`.

@@ -4,15 +4,16 @@
             <text class="title">Lights</text>
             <text class="subtitle">{{ status }}</text>
         </list-item>
-        <list-item for="{{ lights }}" class="light">
+        <!-- Repeats over ids only; row values are read by index so a tap updates one row, not the list. -->
+        <list-item for="{{ lightOrder }}" class="light">
             <div class="row">
                 <div class="text">
-                    <text class="name">{{ $item.name }}</text>
-                    <text class="room">{{ $item.line }}</text>
+                    <text class="name">{{ lights[$idx] ? lights[$idx].name : '' }}</text>
+                    <text class="room">{{ lights[$idx] ? lights[$idx].line : '' }}</text>
                 </div>
-                <input class="toggle-on" type="button" value="{{ $item.label }}" show="{{ $item.isOn }}" onclick="toggle({{ $idx }})"></input>
-                <input class="toggle-off" type="button" value="{{ $item.label }}" show="{{ $item.isOff }}" onclick="toggle({{ $idx }})"></input>
-                <text class="toggle-other" show="{{ $item.isOther }}">{{ $item.label }}</text>
+                <input class="toggle-on" type="button" value="{{ lights[$idx] ? lights[$idx].label : '' }}" show="{{ lights[$idx] ? lights[$idx].isOn : false }}" onclick="toggle({{ $idx }})"></input>
+                <input class="toggle-off" type="button" value="{{ lights[$idx] ? lights[$idx].label : '' }}" show="{{ lights[$idx] ? lights[$idx].isOff : false }}" onclick="toggle({{ $idx }})"></input>
+                <text class="toggle-other" show="{{ lights[$idx] ? lights[$idx].isOther : false }}">{{ lights[$idx] ? lights[$idx].label : '' }}</text>
             </div>
         </list-item>
         <list-item class="footer">
