@@ -6,7 +6,7 @@ so Lite rebuilt all ~21 native rows each time, and each tap also held its own 20
 few). Fix: the list repeats over `lightOrder` (ids) and binds `lights[$idx]`; taps and replies edit one row in
 place; only a reload replaces the arrays, once, after the last page. All requests share one timeout timer.
 25 tests pass, including regressions for row identity, one-shot catalogue rendering and the single timer.
-Not yet confirmed on the watch.
+The user confirmed on the watch (2026-11-27) that 1.0.12 no longer crashes.
 
 ---
 
